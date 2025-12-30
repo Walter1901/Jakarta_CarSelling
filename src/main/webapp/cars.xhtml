@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Cars list</title>
+</h:head>
+
+<h:body>
+
+<h1>Cars list</h1>
+
+<h:form id="filtersForm">
+
+    <h:panelGrid columns="2" cellpadding="5">
+
+        <h:outputLabel for="brand" value="Brand:" />
+        <h:selectOneMenu id="brand" value="#{carListBean.brandId}">
+            <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+            <f:selectItems value="#{carListBean.brands}"
+                           var="b"
+                           itemLabel="#{b.name}"
+                           itemValue="#{b.id}" />
+        </h:selectOneMenu>
+
+        <h:outputLabel for="status" value="Status:" />
+        <h:selectOneMenu id="status" value="#{carListBean.status}">
+            <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+            <f:selectItems value="#{carListBean.statuses}"
+                           var="s"
+                           itemLabel="#{s}"
+                           itemValue="#{s}" />
+        </h:selectOneMenu>
+
+        <h:outputLabel for="minYear" value="Min year:" />
+        <h:inputText id="minYear" value="#{carListBean.minYear}" />
+
+        <h:outputLabel for="maxPrice" value="Max price:" />
+        <h:inputText id="maxPrice" value="#{carListBean.maxPrice}" />
+
+    </h:panelGrid>
+
+    <!-- Repart à la page 0 quand on applique des filtres -->
+    <h:commandButton value="Search" action="#{carListBean.searchFirstPage}" />
+
+</h:form>
+
+<hr/>
+
+<h:dataTable value="#{carListBean.cars}" var="c" border="1">
+    <h:column>
+        <f:facet name="header">Brand</f:facet>
+        #{c.brand.name}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Model</f:facet>
+        #{c.model}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Year</f:facet>
+        #{c.year}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Price</f:facet>
+        #{c.price}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Status</f:facet>
+        #{c.status}
+    </h:column>
+</h:dataTable>
+
+<h:form id="pagerForm">
+    <h:commandButton value="Previous" action="#{carListBean.prevPage}" />
+    <h:commandButton value="Next" action="#{carListBean.nextPage}" />
+    <h:outputText value=" Page #{carListBean.page + 1} / Total: #{carListBean.total}" style="margin-left:10px;" />
+</h:form>
+
+</h:body>
+</html>

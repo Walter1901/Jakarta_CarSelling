@@ -1,16 +1,16 @@
 package ch.hevs.carselling.service;
 
-import ch.hevs.carselling.entity.Car;
-import ch.hevs.carselling.entity.CarBrand;
-import ch.hevs.carselling.entity.Owner;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
-
 import java.math.BigDecimal;
 import java.util.List;
+
+import ch.hevs.carselling.entity.Car;
+import ch.hevs.carselling.entity.CarBrand;
+import ch.hevs.carselling.entity.CarStatus;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class CarSellingService {
@@ -19,29 +19,56 @@ public class CarSellingService {
     private EntityManager em;
 
     @Transactional
-    public void initDemoDataIfEmpty() {
-        Long count = em.createQuery("select count(c) from Car c", Long.class).getSingleResult();
-        if (count != null && count > 0) return;
-
-        Owner o1 = new Owner("Alice", "Martin", "alice.martin@example.com");
-        Owner o2 = new Owner("Bob", "Durand", "bob.durand@example.com");
-
-        CarBrand bmw = new CarBrand("BMW");
-        CarBrand audi = new CarBrand("Audi");
-
-        em.persist(o1);
-        em.persist(o2);
-        em.persist(bmw);
-        em.persist(audi);
-
-        em.persist(new Car("320d", 2019, new BigDecimal("23900.00"), bmw, o1));
-        em.persist(new Car("A3", 2018, new BigDecimal("18900.00"), audi, o2));
+    public List<CarBrand> findAllBrands() {
+        return em.createQuery("SELECT b FROM CarBrand b ORDER BY b.name", CarBrand.class)
+                 .getResultList();
     }
 
-    public List<Car> findAllCars() {
-        return em.createQuery(
-                "select c from Car c join fetch c.brand join fetch c.owner order by c.id",
-                Car.class
-        ).getResultList();
+    @Transactional
+    public long countCars(Long brandId, BigDecimal maxPrice, Integer minYear, CarStatus status) {
+
+        String jpql = """
+            SELECT COUNT(c)
+            FROM Car c
+            WHERE (:brandId IS NULL OR c.brand.id = :brandId)
+              AND (:maxPrice IS NULL OR c.price <= :maxPrice)
+              AND (:minYear IS NULL OR c.year >= :minYear)
+              AND (:status IS NULL OR c.status = :status)
+            """;
+
+        return em.createQuery(jpql, Long.class)
+                 .setParameter("brandId", brandId)
+                 .setParameter("maxPrice", maxPrice)
+                 .setParameter("minYear", minYear)
+                 .setParameter("status", status)
+                 .getSingleResult();
+    }
+
+    @Transactional
+    public List<Car> findCars(Long brandId, BigDecimal maxPrice, Integer minYear, CarStatus status,
+                             int page, int pageSize) {
+
+        String jpql = """
+            SELECT c
+            FROM Car c
+            JOIN FETCH c.brand b
+            JOIN FETCH c.owner o
+            WHERE (:brandId IS NULL OR b.id = :brandId)
+              AND (:maxPrice IS NULL OR c.price <= :maxPrice)
+              AND (:minYear IS NULL OR c.year >= :minYear)
+              AND (:status IS NULL OR c.status = :status)
+            ORDER BY c.price ASC
+            """;
+
+        TypedQuery<Car> q = em.createQuery(jpql, Car.class)
+                              .setParameter("brandId", brandId)
+                              .setParameter("maxPrice", maxPrice)
+                              .setParameter("minYear", minYear)
+                              .setParameter("status", status);
+
+        q.setFirstResult(page * pageSize);
+        q.setMaxResults(pageSize);
+
+        return q.getResultList();
     }
 }

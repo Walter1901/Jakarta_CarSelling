@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>New Car</title>
+</h:head>
+
+<h:body>
+
+<h:form>
+
+    <h:commandButton value="Home" action="index?faces-redirect=true"/>
+    <h:commandButton value="Back to list" action="carList?faces-redirect=true"/>
+
+    <h1>Create new car</h1>
+
+    <h:panelGrid columns="2" cellpadding="5">
+
+        <h:outputLabel value="Model" />
+        <h:inputText value="#{carCreateBean.model}" required="true"/>
+
+        <h:outputLabel value="Year" />
+        <h:inputText value="#{carCreateBean.year}" required="true"/>
+
+        <h:outputLabel value="Price" />
+        <h:inputText value="#{carCreateBean.price}" required="true"/>
+
+        <h:outputLabel value="Status" />
+        <h:selectOneMenu value="#{carCreateBean.status}">
+            <f:selectItems value="#{carCreateBean.statuses}" />
+        </h:selectOneMenu>
+        
+        <h:outputLabel for="owner" value="Owner:" />
+		<h:selectOneMenu id="owner" value="#{carCreateBean.ownerId}" required="true">
+		    <f:selectItem itemLabel="-- Select owner --" itemValue="#{null}" noSelectionOption="true" />
+		    <f:selectItems value="#{carCreateBean.owners}"
+		                   var="o"
+		                   itemValue="#{o.id}"
+		                   itemLabel="#{o.lastName} #{o.firstName} (#{o.email})" />
+		</h:selectOneMenu>
+        
+        <h:outputLabel value="Brand name" />
+        <h:inputText value="#{carCreateBean.brandName}" />
+
+    </h:panelGrid>
+
+    <br/>
+
+    <h:commandButton value="Create car" action="#{carCreateBean.create}" />
+
+</h:form>
+
+</h:body>
+</html>

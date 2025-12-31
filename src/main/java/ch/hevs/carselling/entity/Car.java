@@ -26,7 +26,7 @@ public class Car implements Serializable {
     @Column(nullable = false, length = 20)
     private CarStatus status = CarStatus.AVAILABLE;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "BRAND_ID", nullable = false)
     private CarBrand brand;
 

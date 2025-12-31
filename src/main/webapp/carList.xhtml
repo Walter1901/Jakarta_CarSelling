@@ -53,6 +53,14 @@
 
 <h:dataTable value="#{carListBean.cars}" var="c" border="1">
     <h:column>
+	    <f:facet name="header">Details</f:facet>
+	
+	    <h:link value="View"
+	            outcome="carDetails">
+	        <f:param name="id" value="#{c.id}" />
+	    </h:link>
+	</h:column>
+    <h:column>
         <f:facet name="header">Brand</f:facet>
         #{c.brand.name}
     </h:column>

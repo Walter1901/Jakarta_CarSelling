@@ -14,6 +14,8 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+//UC1
+
 @Named
 @ViewScoped
 public class CarListBean implements Serializable {

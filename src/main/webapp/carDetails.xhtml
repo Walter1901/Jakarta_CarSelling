@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Car detail</title>
+</h:head>
+
+<f:metadata>
+    <f:viewParam name="id" value="#{carDetailBean.id}" />
+    <f:viewAction action="#{carDetailBean.load}" />
+</f:metadata>
+
+<h:body>
+
+<h:form>
+    <h:commandButton value="Home" action="index?faces-redirect=true"/>
+    <h:commandButton value="Back to list" action="carList?faces-redirect=true"/>
+</h:form>
+
+<h1>Car detail</h1>
+
+<h:panelGroup rendered="#{not empty carDetailBean.car}">
+    <h:panelGrid columns="2" cellpadding="5" border="1">
+
+        <h:outputText value="Model" />
+        <h:outputText value="#{carDetailBean.car.model}" />
+
+        <h:outputText value="Year" />
+        <h:outputText value="#{carDetailBean.car.year}" />
+
+        <h:outputText value="Price" />
+        <h:outputText value="#{carDetailBean.car.price}" />
+
+        <h:outputText value="Status" />
+        <h:outputText value="#{carDetailBean.car.status}" />
+
+        <h:outputText value="Brand" />
+        <h:outputText value="#{carDetailBean.car.brand.name}" />
+
+        <h:outputText value="Owner" />
+        <h:outputText value="#{carDetailBean.car.owner.firstName} #{carDetailBean.car.owner.lastName}" />
+
+        <h:outputText value="Owner email" />
+        <h:outputText value="#{carDetailBean.car.owner.email}" />
+
+    </h:panelGrid>
+</h:panelGroup>
+
+<h:panelGroup rendered="#{empty carDetailBean.car}">
+    <h:outputText value="No car found (missing id parameter)." />
+</h:panelGroup>
+
+</h:body>
+</html>

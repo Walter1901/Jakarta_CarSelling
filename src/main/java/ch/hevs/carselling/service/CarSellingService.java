@@ -71,4 +71,19 @@ public class CarSellingService {
 
         return q.getResultList();
     }
+    
+    @Transactional
+    public Car findCarById(Long id) {
+        String jpql = """
+            SELECT c
+            FROM Car c
+            JOIN FETCH c.brand
+            JOIN FETCH c.owner
+            WHERE c.id = :id
+            """;
+
+        return em.createQuery(jpql, Car.class)
+                 .setParameter("id", id)
+                 .getSingleResult();
+    }
 }

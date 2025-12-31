@@ -3,9 +3,7 @@ package ch.hevs.carselling.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import ch.hevs.carselling.entity.Car;
-import ch.hevs.carselling.entity.CarBrand;
-import ch.hevs.carselling.entity.CarStatus;
+import ch.hevs.carselling.entity.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -86,4 +84,41 @@ public class CarSellingService {
                  .setParameter("id", id)
                  .getSingleResult();
     }
+    
+ // UC3 - create car with cascade persist
+    @Transactional
+    public void createCar(Car car) {
+        em.persist(car);
+    }
+
+ // UC3
+    @Transactional
+    public CarBrand findBrandByName(String name) {
+        try {
+            return em.createQuery(
+                    "SELECT b FROM CarBrand b WHERE b.name = :name",
+                    CarBrand.class
+            ).setParameter("name", name)
+             .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+ // UC3
+    @Transactional
+    public Owner findOwnerById(Long ownerId) {
+        if (ownerId == null) return null;
+        return em.find(Owner.class, ownerId);
+    }
+    
+ // UC3
+    @Transactional
+    public List<Owner> findAllOwners() {
+        return em.createQuery(
+                "SELECT o FROM Owner o ORDER BY o.lastName, o.firstName",
+                Owner.class
+        ).getResultList();
+    }
+
 }

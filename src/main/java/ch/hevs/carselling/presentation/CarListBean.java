@@ -36,6 +36,8 @@ public class CarListBean implements Serializable {
     private int page = 0;
     private int pageSize = 10;
     private long total;
+    
+    private String buyerName;    
 
     @PostConstruct
     public void init() {
@@ -67,9 +69,14 @@ public class CarListBean implements Serializable {
         }
     }
 
-    // Pour <f:selectItems> : liste des valeurs d'enum
+    // Pour <f:selectItems> : ComboList avec valeurs Enum
     public List<CarStatus> getStatuses() {
         return Arrays.asList(CarStatus.values());
+    }
+    
+    public String sell(Long carId) {
+        service.sellCar(carId, buyerName);
+        return "carList?faces-redirect=true";
     }
 
     // getters/setters
@@ -91,4 +98,7 @@ public class CarListBean implements Serializable {
     public int getPage() { return page; }
     public long getTotal() { return total; }
     public int getPageSize() { return pageSize; }
+    
+    public String getBuyerName() { return buyerName; }
+    public void setBuyerName(String buyerName) { this.buyerName = buyerName; }
 }

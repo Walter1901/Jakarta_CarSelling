@@ -33,6 +33,10 @@ public class Car implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "OWNER_ID", nullable = false)
     private Owner owner;
+    
+    @Version	//optimistic lock
+    @Column(name="VERSION", nullable=false)
+    private long version;
 
     public Car() {
     }
@@ -48,6 +52,10 @@ public class Car implements Serializable {
 
     public Long getId() {
         return id;
+    }
+    
+    public void setId(Long id) { 
+    	this.id = id; 
     }
 
     public String getModel() {
@@ -97,4 +105,6 @@ public class Car implements Serializable {
     public void setOwner(Owner owner) {
         this.owner = owner;
     }
+    public long getVersion() { return version; }
+    public void setVersion(long version) { this.version = version; }
 }

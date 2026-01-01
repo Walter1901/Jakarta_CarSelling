@@ -2,19 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html">
 <h:head>
-    <title>CarSelling</title>
+    <title>CarSelling App</title>
 </h:head>
 
 <h:body>
 
-    <h1>CarSelling App</h1>
+<h1>CarSelling App</h1>
 
-    <ul>
-        <li>
-            <h:link value="Cars list"
-                    outcome="carList" />
-        </li>
-    </ul>
+<h:form>
+    <h:commandButton value="Cars list" action="carList?faces-redirect=true" />
+    <h:commandButton value="Owner dashboard" action="ownerSelect?faces-redirect=true" />
+</h:form>
 
 </h:body>
 </html>

@@ -1,9 +1,15 @@
 package ch.hevs.carselling.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import ch.hevs.carselling.entity.*;
+import ch.hevs.carselling.entity.Car;
+import ch.hevs.carselling.entity.CarBrand;
+import ch.hevs.carselling.entity.CarStatus;
+import ch.hevs.carselling.entity.Owner;
+import ch.hevs.carselling.entity.Sale;
+import ch.hevs.carselling.entity.SalesStats;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -120,5 +126,40 @@ public class CarSellingService {
                 Owner.class
         ).getResultList();
     }
+    
+ // UC4
+    @Transactional
+    public void sellCar(Long carId, String buyerName) {
+        if (carId == null) {
+            throw new IllegalArgumentException("carId is null");
+        }
 
+        Car car = em.find(Car.class, carId);
+        if (car == null) {
+            throw new IllegalArgumentException("Car not found: " + carId);
+        }
+        if (car.getStatus() == CarStatus.SOLD) {
+            throw new IllegalStateException("Car already SOLD: " + carId);
+        }
+
+        // 1) status = SOLD
+        car.setStatus(CarStatus.SOLD);
+
+        // 2) create Sale
+        Sale sale = new Sale();
+        sale.setCar(car);
+        sale.setSoldAt(LocalDateTime.now());
+        sale.setPriceAtSale(car.getPrice());
+        sale.setBuyerName((buyerName == null || buyerName.trim().isEmpty()) ? null : buyerName.trim());
+        em.persist(sale);
+
+        // 3) increment stats (create row lazily if missing)
+        SalesStats stats = em.find(SalesStats.class, 1);
+        if (stats == null) {
+            stats = new SalesStats(1);
+            em.persist(stats);
+            em.flush(); 
+        }
+        stats.incrementSold();
+    }
 }

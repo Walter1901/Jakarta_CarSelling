@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Select Owner</title>
+</h:head>
+
+<h:body>
+
+<h:form>
+    <h:commandButton value="Home" action="index?faces-redirect=true" />
+    <h:commandButton value="Cars list" action="carList?faces-redirect=true" />
+</h:form>
+
+<h2>Owner Dashboard</h2>
+
+<h:panelGroup rendered="#{currentOwnerBean.ownerSelected}">
+    <p>
+        Current owner:
+        <strong>
+            #{currentOwnerBean.selectedOwner.firstName}
+            #{currentOwnerBean.selectedOwner.lastName}
+        </strong>
+    </p>
+
+    <h:form>
+        <h:commandButton value="Clear current owner"
+                         action="#{ownerSelectBean.clearOwner}" />
+    </h:form>
+
+    <hr/>
+</h:panelGroup>
+
+<h:form>
+    <h:outputLabel value="Select an owner: " for="owner" />
+    <h:selectOneMenu id="owner" value="#{ownerSelectBean.ownerId}">
+        <f:selectItem itemLabel="-- choose --" itemValue="#{null}" noSelectionOption="true"/>
+        <f:selectItems value="#{ownerSelectBean.owners}"
+                       var="o"
+                       itemValue="#{o.id}"
+                       itemLabel="#{o.firstName} #{o.lastName}" />
+    </h:selectOneMenu>
+
+    <h:commandButton value="Select"
+                     action="#{ownerSelectBean.selectOwner}"
+                     disabled="#{currentOwnerBean.ownerSelected}" />
+</h:form>
+
+</h:body>
+</html>

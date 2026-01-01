@@ -162,4 +162,5 @@ public class CarSellingService {
         }
         stats.incrementSold();
     }
+    
 }

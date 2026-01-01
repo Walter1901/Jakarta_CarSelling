@@ -16,6 +16,25 @@
 
 <h1>Cars list</h1>
 
+<h:panelGroup rendered="#{currentOwnerBean.ownerSelected}">
+    <p>
+        Current owner:
+        <strong>
+            #{currentOwnerBean.selectedOwner.firstName}
+            #{currentOwnerBean.selectedOwner.lastName}
+        </strong>
+        <h:link value="(change)" outcome="ownerSelect" />
+    </p>
+</h:panelGroup>
+
+<h:panelGroup rendered="#{not currentOwnerBean.ownerSelected}">
+    <p>
+        No current owner selected.
+        <h:link value="Select an owner" outcome="ownerSelect" />
+    </p>
+</h:panelGroup>
+
+
 <!-- Filtres -->
 <h:form id="filtersForm">
 

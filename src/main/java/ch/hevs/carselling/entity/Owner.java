@@ -20,9 +20,13 @@ public class Owner implements Serializable {
     @Column(name = "EMAIL", length = 120)
     private String email;
 
+    @Embedded
+    private Address address = new Address();
+
     public Owner() {}
 
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -32,4 +36,9 @@ public class Owner implements Serializable {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public Address getAddress() { return address; }
+    public void setAddress(Address address) {
+        this.address = (address == null) ? new Address() : address;
+    }
 }

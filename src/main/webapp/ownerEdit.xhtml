@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Edit Owner Address</title>
+</h:head>
+
+<h:body>
+
+<h:form>
+    <h:commandButton value="Back" action="ownerSelect?faces-redirect=true" />
+    <h:commandButton value="Cars list" action="carList?faces-redirect=true" />
+</h:form>
+
+<h2>Edit address</h2>
+
+<h:panelGroup rendered="#{not currentOwnerBean.ownerSelected}">
+    <p>No current owner selected. Please select an owner first.</p>
+    <h:link value="Go to Owner Dashboard" outcome="ownerSelect" />
+</h:panelGroup>
+
+<h:panelGroup rendered="#{currentOwnerBean.ownerSelected}">
+    <p>
+        Current owner:
+        <strong>
+            #{currentOwnerBean.selectedOwner.firstName}
+            #{currentOwnerBean.selectedOwner.lastName}
+        </strong>
+    </p>
+
+    <h:messages globalOnly="true" />
+
+    <h:form>
+        <h:panelGrid columns="2" cellpadding="5">
+
+            <h:outputLabel for="street" value="Street:" />
+            <h:inputText id="street" value="#{ownerEditBean.street}" />
+
+            <h:outputLabel for="zip" value="Zip:" />
+            <h:inputText id="zip" value="#{ownerEditBean.zip}">
+                <f:convertNumber integerOnly="true" />
+            </h:inputText>
+
+            <h:outputLabel for="city" value="City:" />
+            <h:inputText id="city" value="#{ownerEditBean.city}" />
+
+        </h:panelGrid>
+
+        <h:commandButton value="Save" action="#{ownerEditBean.save}" />
+    </h:form>
+</h:panelGroup>
+
+</h:body>
+</html>

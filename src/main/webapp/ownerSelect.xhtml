@@ -22,6 +22,8 @@
             #{currentOwnerBean.selectedOwner.firstName}
             #{currentOwnerBean.selectedOwner.lastName}
         </strong>
+        |
+        <h:link value="Edit address" outcome="ownerEdit" />
     </p>
 
     <h:form>
@@ -31,6 +33,7 @@
 
     <hr/>
 </h:panelGroup>
+
 
 <h:form>
     <h:outputLabel value="Select an owner: " for="owner" />

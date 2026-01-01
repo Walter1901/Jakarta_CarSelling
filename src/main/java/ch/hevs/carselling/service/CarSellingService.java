@@ -163,4 +163,24 @@ public class CarSellingService {
         stats.incrementSold();
     }
     
+ // UC6
+    @Transactional
+    public void updateOwnerAddress(Long ownerId, String street, Integer zip, String city) {
+        if (ownerId == null) {
+            throw new IllegalArgumentException("ownerId is null");
+        }
+
+        Owner owner = em.find(Owner.class, ownerId);
+        if (owner == null) {
+            throw new IllegalArgumentException("Owner not found: " + ownerId);
+        }
+
+        if (owner.getAddress() == null) {
+            owner.setAddress(new ch.hevs.carselling.entity.Address());
+        }
+
+        owner.getAddress().setStreet((street == null || street.trim().isEmpty()) ? null : street.trim());
+        owner.getAddress().setZip(zip);
+        owner.getAddress().setCity((city == null || city.trim().isEmpty()) ? null : city.trim());
+    }
 }

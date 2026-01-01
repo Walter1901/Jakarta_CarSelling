@@ -10,6 +10,7 @@ import ch.hevs.carselling.entity.CarBrand;
 import ch.hevs.carselling.entity.CarStatus;
 import ch.hevs.carselling.service.CarSellingService;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -75,8 +76,13 @@ public class CarListBean implements Serializable {
     }
     
     public String sell(Long carId) {
-        service.sellCar(carId, buyerName);
-        return "carList?faces-redirect=true";
+        if (!FacesContext.getCurrentInstance().getExternalContext().isUserInRole("SELLER")
+            && !FacesContext.getCurrentInstance().getExternalContext().isUserInRole("ADMIN")) {
+            return null;
+        }
+        service.sellCar(carId, null);
+        search(); 
+        return null;
     }
 
     // getters/setters

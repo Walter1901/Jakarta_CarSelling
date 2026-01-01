@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "CAR")
-public class Car implements Serializable {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "CAR_TYPE", length = 20)
+public abstract class Car implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +35,12 @@ public class Car implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "OWNER_ID", nullable = false)
     private Owner owner;
-    
-    @Version	//optimistic lock
-    @Column(name="VERSION", nullable=false)
+
+    @Version // optimistic lock
+    @Column(name = "VERSION", nullable = false)
     private long version;
 
-    public Car() {
-    }
+    public Car() {}
 
     public Car(String model, Integer year, BigDecimal price, CarStatus status, CarBrand brand, Owner owner) {
         this.model = model;
@@ -50,61 +51,36 @@ public class Car implements Serializable {
         this.owner = owner;
     }
 
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) { 
-    	this.id = id; 
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getModel() {
-        return model;
-    }
+    public String getModel() { return model; }
+    public void setModel(String model) { this.model = model; }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
+    public Integer getYear() { return year; }
+    public void setYear(Integer year) { this.year = year; }
 
-    public Integer getYear() {
-        return year;
-    }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public CarStatus getStatus() {
-        return status;
-    }
-
+    public CarStatus getStatus() { return status; }
     public void setStatus(CarStatus status) {
         this.status = (status == null) ? CarStatus.AVAILABLE : status;
     }
 
-    public CarBrand getBrand() {
-        return brand;
-    }
+    public CarBrand getBrand() { return brand; }
+    public void setBrand(CarBrand brand) { this.brand = brand; }
 
-    public void setBrand(CarBrand brand) {
-        this.brand = brand;
-    }
+    public Owner getOwner() { return owner; }
+    public void setOwner(Owner owner) { this.owner = owner; }
 
-    public Owner getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Owner owner) {
-        this.owner = owner;
-    }
     public long getVersion() { return version; }
     public void setVersion(long version) { this.version = version; }
+    
+    @Transient
+    public String getCarType() {
+        if (this instanceof ElectricCar) return "ELECTRIC";
+        if (this instanceof FuelCar) return "FUEL";
+        return "UNKNOWN";
+    }
 }

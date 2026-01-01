@@ -43,6 +43,12 @@
         
         <h:outputLabel value="Brand name" />
         <h:inputText value="#{carCreateBean.brandName}" />
+        
+        <h:outputLabel for="type" value="Type:" />
+		<h:selectOneMenu id="type" value="#{carCreateBean.carType}">
+		    <f:selectItems value="#{carCreateBean.carTypes}" />
+		</h:selectOneMenu>
+		        
 
     </h:panelGrid>
 

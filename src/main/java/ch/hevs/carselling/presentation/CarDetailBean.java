@@ -9,7 +9,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.NoResultException;
 
-//UC2
+// UC2 — View car details (JPA associations)
+// Displays @ManyToOne relations: Car → Brand, Car → Owner
+// Object navigation: car.brand.name, car.owner.firstName
 
 @Named
 @ViewScoped

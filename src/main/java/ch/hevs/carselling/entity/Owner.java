@@ -3,6 +3,10 @@ package ch.hevs.carselling.entity;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
+// UC6 — Embedded address (JPA Embedding)
+// @Embedded Address: integrates address fields into OWNER table.
+// Demonstrates value object composition without FK relation.
+
 @Entity
 @Table(name = "OWNER")
 public class Owner implements Serializable {

@@ -11,6 +11,11 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 
+// UC5 — Owner management (address editing)
+// UC6 — Embedded address (@Embedded)
+// Edits current owner's address (from session).
+// Demonstrates @Embedded object modification (Owner.address).
+
 @Named("ownerEditBean")
 @ViewScoped
 public class OwnerEditBean implements Serializable {

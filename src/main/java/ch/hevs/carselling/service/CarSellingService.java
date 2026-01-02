@@ -16,18 +16,26 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
+// Service layer implementing business logic for all use cases.
+// Handles JPQL, transactions, cascade persistence, JPA relations.
+// UC1: filters/pagination, UC2: relations, UC3: cascade persist,
+// UC4: business transaction, UC5: owner management, UC6: embedded address.
+
 @ApplicationScoped
 public class CarSellingService {
 
     @PersistenceContext
     private EntityManager em;
 
+    // UC1, UC3 — Lists all brands (for filter + creation dropdown)
     @Transactional
     public List<CarBrand> findAllBrands() {
         return em.createQuery("SELECT b FROM CarBrand b ORDER BY b.name", CarBrand.class)
                  .getResultList();
     }
 
+    // UC1 — Counts filtered cars (for pagination)
+    // JPQL with optional parameters (IS NULL pattern)
     @Transactional
     public long countCars(Long brandId, BigDecimal maxPrice, Integer minYear, CarStatus status) {
 
@@ -48,6 +56,8 @@ public class CarSellingService {
                  .getSingleResult();
     }
 
+    // UC1 — Finds cars with filters, sorting, pagination
+    // JPQL with JOIN FETCH (eager loading) to avoid N+1 queries
     @Transactional
     public List<Car> findCars(Long brandId, BigDecimal maxPrice, Integer minYear, CarStatus status,
                              int page, int pageSize) {
@@ -75,7 +85,9 @@ public class CarSellingService {
 
         return q.getResultList();
     }
-    
+
+    // UC2 — Fetches car by ID with relations (Brand, Owner)
+    // JOIN FETCH for eager loading of @ManyToOne associations
     @Transactional
     public Car findCarById(Long id) {
         String jpql = """
@@ -90,14 +102,17 @@ public class CarSellingService {
                  .setParameter("id", id)
                  .getSingleResult();
     }
-    
- // UC3 - create car with cascade persist
+
+    // UC3 — Creates car (cascade PERSIST)
+    // If car.brand has id=null, JPA persists it automatically (cascade)
+    // Supports UC7: accepts ElectricCar or FuelCar polymorphically
     @Transactional
     public void createCar(Car car) {
         em.persist(car);
     }
 
- // UC3
+    // UC3 — Finds brand by name (for "on the fly" creation)
+    // Returns null if non-existent (allowing new CarBrand())
     @Transactional
     public CarBrand findBrandByName(String name) {
         try {
@@ -111,14 +126,16 @@ public class CarSellingService {
         }
     }
 
- // UC3
+    // UC3, UC5 — Fetches owner by ID
+    // Used for car creation (UC3) and session owner (UC5)
     @Transactional
     public Owner findOwnerById(Long ownerId) {
         if (ownerId == null) return null;
         return em.find(Owner.class, ownerId);
     }
-    
- // UC3
+
+    // UC3, UC5 — Lists all owners (creation + selection dropdown)
+    // Sorted by name for alphabetical display
     @Transactional
     public List<Owner> findAllOwners() {
         return em.createQuery(
@@ -126,8 +143,10 @@ public class CarSellingService {
                 Owner.class
         ).getResultList();
     }
-    
- // UC4
+
+    // UC4 — Register a sale (business transaction @Transactional)
+    // Atomic operations: 1) status=SOLD, 2) create Sale, 3) increment stats
+    // If any step fails, automatic rollback ensures consistency
     @Transactional
     public void sellCar(Long carId, String buyerName) {
         if (carId == null) {
@@ -162,8 +181,10 @@ public class CarSellingService {
         }
         stats.incrementSold();
     }
-    
- // UC6
+
+    // UC6 — Updates owner address (@Embedded)
+    // Modifies embedded object Owner.address (columns STREET, ZIP, CITY)
+    // Changes automatically persisted (managed entity)
     @Transactional
     public void updateOwnerAddress(Long ownerId, String street, Integer zip, String city) {
         if (ownerId == null) {

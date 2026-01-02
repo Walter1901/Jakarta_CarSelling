@@ -4,6 +4,12 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+// UC7 — Inheritance (JPA Inheritance)
+// Abstract Car class with SINGLE_TABLE strategy.
+// Subclasses: ElectricCar, FuelCar (discriminator CAR_TYPE).
+// Specific fields in subclasses (batteryKwh, tankLiters).
+// Also supports UC2 (@ManyToOne relations) and UC3 (cascade PERSIST → Brand).
+
 @Entity
 @Table(name = "CAR")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

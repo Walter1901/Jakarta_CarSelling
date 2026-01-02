@@ -11,7 +11,11 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-// UC3 (updated for UC7 inheritance)
+// UC3 — Create car listing (cascade/transitive persistence)
+// Allows creating a brand "on the fly" if non-existent.
+// Cascade PERSIST: Car → CarBrand (automatic transitive persistence).
+// Updated for UC7: polymorphic instantiation ElectricCar/FuelCar.
+
 @Named("carCreateBean")
 @ViewScoped
 public class CarCreateBean implements Serializable {

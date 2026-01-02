@@ -8,6 +8,11 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+// UC5 — Owner management (@SessionScoped)
+// Session bean storing the currently selected owner.
+// Preserves selectedOwnerId across all session pages.
+// Lazy loading pattern: fetches complete Owner on demand.
+
 @Named("currentOwnerBean")
 @SessionScoped
 public class CurrentOwnerBean implements Serializable {

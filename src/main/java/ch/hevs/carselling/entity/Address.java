@@ -4,6 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 
+// UC6 — Embedded address (JPA Embedding)
+// @Embeddable: non-entity component integrated into Owner.
+// No separate table: columns (street, zip, city) in OWNER table.
+
 @Embeddable
 public class Address implements Serializable {
 

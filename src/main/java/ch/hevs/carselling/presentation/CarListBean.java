@@ -15,7 +15,9 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-//UC1
+// UC1 — List / filter cars (JPQL + relations)
+// JSF page with filters (brand, max price, min year, status), sorting, pagination.
+// JPQL queries with parameters for dynamic filtering.
 
 @Named
 @ViewScoped

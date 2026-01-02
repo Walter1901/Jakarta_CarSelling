@@ -8,6 +8,10 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+// UC5 — Owner management (selection)
+// Request bean for owner selection form.
+// Stores chosen owner in CurrentOwnerBean (@SessionScoped).
+
 @Named("ownerSelectBean")
 @RequestScoped
 public class OwnerSelectBean {
